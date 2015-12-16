@@ -1,0 +1,59 @@
+defaults: &DEFAULTS
+  servicename: ViP merge and compute
+
+  # set to false if you want to make your http calls to ECS directly
+  # or set it to a proxy url like http://proxy.example.com:7888
+  # The default is using no proxy.
+  # proxy: http://localhost:3128
+  proxy: false
+
+  # valid debug levels: debug, info, error
+  debug_level: debug
+
+  resources:
+    evaluationjobs:
+      pretty_print: false
+      name: numlab/evaluation_jobs
+    results:
+      pretty_print: false
+      name: numlab/results
+    points:
+      pretty_print: false
+      name: numlab/points
+    exercises:
+      pretty_print: false
+      name: numlab/exercises
+    solutions:
+      pretty_print: false
+      name: numlab/solutions
+    evaluations:
+      pretty_print: false
+      name: numlab/evaluations
+    points:
+      pretty_print: false
+      name: numlab/points
+
+  eventtypes:
+    job:
+      name: numlab/evaluation_jobs
+    result:
+      name: numlab/results
+
+  ecs:
+    url: https://ecs.example.com
+    # basic auth
+    login: mergeandcompute
+    password: auswertung
+    ssl_ca_file: ca.crt.pem
+    verify_ssl: false
+
+development:
+  <<: *DEFAULTS
+
+test:
+  <<: *DEFAULTS
+
+production:
+  <<: *DEFAULTS
+  # valid debug levels: debug, info, error
+  debug_level: info
