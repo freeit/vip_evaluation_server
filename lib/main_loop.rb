@@ -26,13 +26,13 @@ class MainLoop
         sleep(1)
       else
         if evbody[0]["ressource"].start_with?(APP_CONFIG["eventtypes"]["job"]["name"])
-          Rails.logger.info "received \"#{APP_CONFIG["eventtypes"]["job"]["name"]}\" event type"
+          Rails.logger.info "***** received \"#{APP_CONFIG["eventtypes"]["job"]["name"]}\" event type"
           JobEvent.new.process(evbody)
         elsif evbody[0]["ressource"].start_with?(APP_CONFIG["eventtypes"]["result"]["name"])
-          Rails.logger.info "received \"#{APP_CONFIG["eventtypes"]["result"]["name"]}\" event type"
+          Rails.logger.info "***** received \"#{APP_CONFIG["eventtypes"]["result"]["name"]}\" event type"
           process_result_event(evbody)
         else
-          Rails.logger.info "Unknown event type"
+          Rails.logger.info "***** Unknown event: #{evbody[0]}"
         end
       end
     end
