@@ -74,8 +74,12 @@ class JobEvent
   ##
   # Calls the computation backend with membership_id *mid*.
   def compute(exercise, solution, mid)
-    @ecs.connection[APP_CONFIG["resources"]["exercises"]["name"]].post exercise.to_json, {"X-EcsReceiverMemberships" => mid}
-    @ecs.connection[APP_CONFIG["resources"]["solutions"]["name"]].post solution.to_json, {"X-EcsReceiverMemberships" => mid}
+    response= @ecs.connection[APP_CONFIG["resources"]["exercises"]["name"]].post exercise.to_json, {"X-EcsReceiverMemberships" => mid}
+    solution["Solution"]["exercise"]= response.headers[:location]
+    Rails.logger.info "***** JobEvent#compute substitute exersice URL in solution to: #{solution["Solution"]["exercise"]}"
+    @ecs.connection[APP_CONFIG["resources"]["solutions"]["name"]].post solution.to_json, {"X-EcsReceiverMemberships" => mid} do |response, request, result| 
+      Rails.logger.info "***** JobEvent#compute solution post response: #{response.headers}"
+    end
   end
 
 end
