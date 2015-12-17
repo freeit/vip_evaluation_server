@@ -58,8 +58,13 @@ class MainLoop
     @ecs.connection["sys/events/fifo"].post ""
   end
 
-  def process_result_event(ev)
-    # TODO remove exercise referenced through solution embedded in result
+  def process_result_event(evbody)
+    path= evbody[0]['ressource']
+    result= @ecs.connection[path].delete
+    Rails.logger.info "***** MainLoop#process_result_event: #{path} = #{result}"
+    # remove exercise referenced through solution embedded in result
+    path= URI(JSON::parse(result)["Result"]["Solution"]["exercise"]).path[1..-1]
+    @ecs.connection[path].delete
   end
 
 end
