@@ -6,15 +6,17 @@ class JobEvent
   ##
   # Process a *sys/events* job event.
   # This is the entrypoint of job event processing.
-  def process(jobev)
-    Rails.logger.info "***** JobEvent#process: eventbody=#{jobev}"
-    case jobev[0]['status']
+  def process(jobevbody)
+    Rails.logger.info "***** JobEvent#process: eventbody=#{jobevbody}"
+    case jobevbody[0]['status']
     when "created","updated"
-      job=JSON.parse(@ecs.connection[jobev[0]['ressource']].delete)
+      jobr= @ecs.connection[jobevbody[0]['ressource']].delete
+      job_headers= jobr.headers
+      job=JSON.parse(jobr)
       exercise = JSON.parse fetch_exercise(job)
       evaluation = JSON.parse fetch_evaluation(job)
       solution = JSON.parse fetch_solution(job)
-      exercise,solution = merge(exercise, evaluation, solution, job["EvaluationJob"]["identifier"])
+      exercise,solution = merge(exercise, evaluation, solution, job, job_headers)
       computation_backend = job["EvaluationJob"]["target"]["mid"]
       compute(exercise, solution, computation_backend)
     end
@@ -55,7 +57,9 @@ class JobEvent
   ##
   # Substitute evaluation code snippets with appropriate exercise code
   # snippets.
-  def merge(exercise, evaluation, solution, jobid)
+  def merge(exercise, evaluation, solution, job, job_headers)
+    jobid= job["EvaluationJob"]["identifier"]
+    job_sender= job_headers[:x_ecssender]
     evaluation["Evaluation"]["elements"].each do |ev|
       exercise["Exercise"]["elements"].map! do |ex|
         if ex["identifier"] == ev["identifier"]
@@ -65,7 +69,7 @@ class JobEvent
         end
       end
     end
-    solution["Solution"]["evaluationJobID"]= jobid
+    solution["Solution"]["evaluationService"]= { :jobID => jobid, :jobSender => job_sender }
     Rails.logger.info "***** JobEvent#merge exercise: #{exercise.to_json}"
     Rails.logger.info "***** JobEvent#merge solution: #{solution.to_json}"
     return exercise, solution
