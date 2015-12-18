@@ -30,7 +30,7 @@ class MainLoop
           JobEvent.new.process(evbody)
         elsif evbody[0]["ressource"].start_with?(APP_CONFIG["eventtypes"]["result"]["name"])
           Rails.logger.info "***** received \"#{APP_CONFIG["eventtypes"]["result"]["name"]}\" event type"
-          process_result_event(evbody)
+          ResultEvent.new.process(evbody)
         else
           Rails.logger.info "***** Unknown event: #{evbody[0]}"
         end
@@ -58,14 +58,6 @@ class MainLoop
     @ecs.connection["sys/events/fifo"].post ""
   end
 
-  def process_result_event(evbody)
-    path= evbody[0]['ressource']
-    result= @ecs.connection[path].delete
-    Rails.logger.info "***** MainLoop#process_result_event: #{path} = #{result}"
-    # remove exercise referenced through solution embedded in result
-    path= URI(JSON::parse(result)["Result"]["Solution"]["exercise"]).path[1..-1]
-    @ecs.connection[path].delete
-  end
 
 end
 
