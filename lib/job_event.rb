@@ -29,7 +29,7 @@ class JobEvent
   def fetch_exercise(job)
     # URI#path returns the path with leading "/"
     path= URI(job["EvaluationJob"]["resources"]["exercise"]).path[1..-1]
-    exercise= @ecs.connection[path].get # FIXME change to delete
+    exercise= @ecs.connection[path].delete
     Rails.logger.info "***** JobEvent#fetch_exercise: #{path} = #{exercise}"
     exercise
   end
@@ -39,7 +39,7 @@ class JobEvent
   def fetch_evaluation(job)
     # URI#path returns the path with leading "/"
     path= URI(job["EvaluationJob"]["resources"]["evaluation"]).path[1..-1]
-    evaluation= @ecs.connection[path].get # FIXME change to delete
+    evaluation= @ecs.connection[path].delete
     Rails.logger.info "***** JobEvent#fetch_evaluation: #{path} = #{evaluation}"
     evaluation
   end
@@ -49,7 +49,7 @@ class JobEvent
   def fetch_solution(job)
     # URI#path returns the path with leading "/"
     path= URI(job["EvaluationJob"]["resources"]["solution"]).path[1..-1]
-    solution= @ecs.connection[path].get # FIXME change to delete
+    solution= @ecs.connection[path].delete
     Rails.logger.info "***** JobEvent#fetch_solution: #{path} = #{solution}"
     solution
   end
