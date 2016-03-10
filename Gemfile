@@ -30,6 +30,7 @@ gem 'rest-client'
 
 gem 'minitest-rails', group: [:development, :test]
 gem 'haml-rails', group: [:development, :test]
+gem 'rubyzip'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

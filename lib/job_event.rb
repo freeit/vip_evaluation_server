@@ -1,4 +1,9 @@
+require 'zip'
+
 class JobEvent
+
+  include VipPack
+
   def initialize
     @ecs=HttpEcs.instance
   end
@@ -30,6 +35,7 @@ class JobEvent
     # URI#path returns the path with leading "/"
     path= URI(job["EvaluationJob"]["resources"]["exercise"]).path[1..-1]
     exercise= @ecs.connection[path].delete
+    exercise = unpack(exercise.body) if packed?(exercise.body)
     Rails.logger.info "***** JobEvent#fetch_exercise: #{path} = #{exercise}"
     exercise
   end
@@ -40,6 +46,7 @@ class JobEvent
     # URI#path returns the path with leading "/"
     path= URI(job["EvaluationJob"]["resources"]["evaluation"]).path[1..-1]
     evaluation= @ecs.connection[path].delete
+    evaluation = unpack(evaluation.body) if packed?(evaluation.body)
     Rails.logger.info "***** JobEvent#fetch_evaluation: #{path} = #{evaluation}"
     evaluation
   end
@@ -50,6 +57,7 @@ class JobEvent
     # URI#path returns the path with leading "/"
     path= URI(job["EvaluationJob"]["resources"]["solution"]).path[1..-1]
     solution= @ecs.connection[path].delete
+    solution = unpack(solution.body) if packed?(solution.body)
     Rails.logger.info "***** JobEvent#fetch_solution: #{path} = #{solution}"
     solution
   end
