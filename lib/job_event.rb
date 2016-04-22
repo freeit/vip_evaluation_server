@@ -18,6 +18,7 @@ class JobEvent
       jobr= @ecs.connection[jobevbody[0]['ressource']].delete
       job_headers= jobr.headers
       job=JSON.parse(jobr)
+      Rails.logger.info "***** JobEvent#process: EvaluationJob: #{JSON.pretty_generate(job)}"
       exercise = JSON.parse fetch_exercise(job)
       evaluation = JSON.parse fetch_evaluation(job)
       solution = JSON.parse fetch_solution(job)

@@ -31,6 +31,7 @@ class MainLoop
         elsif evbody[0]["ressource"].start_with?(APP_CONFIG["eventtypes"]["result"]["name"])
           Rails.logger.info "***** received \"#{APP_CONFIG["eventtypes"]["result"]["name"]}\" event type"
           ResultEvent.new.process(evbody)
+          Rails.logger.info "===READY==="
         else
           Rails.logger.info "***** Unknown event: #{evbody[0]}"
         end
