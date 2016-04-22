@@ -21,5 +21,6 @@ module Vipevalservice
     # config.i18n.default_locale = :de
     config.autoload_paths += %W(#{config.root}/lib)
     config.middleware.delete "ActionDispatch::ParamsParser"
+    config.logger = ::Logger.new(Rails.root+"log/"+"#{Rails.env+'.log'}")
   end
 end
