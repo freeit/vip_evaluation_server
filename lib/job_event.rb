@@ -90,7 +90,13 @@ class JobEvent
     response= @ecs.connection[APP_CONFIG["resources"]["exercises"]["name"]].post exercise.to_json, {"X-EcsReceiverMemberships" => mid}
     solution["Solution"]["exercise"]= response.headers[:location]
     Rails.logger.info "***** JobEvent#compute substitute exersice URL in solution to: #{solution["Solution"]["exercise"]}"
-    @ecs.connection[APP_CONFIG["resources"]["solutions"]["name"]].post solution.to_json, {"X-EcsReceiverMemberships" => mid} do |response, request, result| 
+    if exercise["Exercise"]["routing"]
+      routing_path = APP_CONFIG["resources"]["servicename"]+"/"+exercise["Exercise"]["routing"]["solutionQueue"]
+    else
+      routing_path = APP_CONFIG["resources"]["solutions"]["name"]
+    end
+    Rails.logger.info "***** JobEvent#compute routing path for solution: #{routing_path}"
+    @ecs.connection[routing_path].post solution.to_json, {"X-EcsReceiverMemberships" => mid} do |response, request, result|
       Rails.logger.info "***** JobEvent#compute solution post response: #{response.headers}"
     end
   end

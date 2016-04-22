@@ -11,6 +11,7 @@ defaults: &DEFAULTS
   debug_level: debug
 
   resources:
+    servicename: numlab
     evaluationjobs:
       pretty_print: false
       name: numlab/evaluation_jobs
