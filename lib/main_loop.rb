@@ -56,7 +56,7 @@ class MainLoop
   end
 
   def read_event
-    @ecs.connection["sys/events/fifo"].post ""
+    @ecs.connection[APP_CONFIG["resources"]["sys_events"]["name"]+"/fifo"].post ""
   end
 
 

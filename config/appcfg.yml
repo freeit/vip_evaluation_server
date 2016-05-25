@@ -12,6 +12,12 @@ defaults: &DEFAULTS
 
   resources:
     servicename: numlab
+    sys_events:
+      pretty_print: false
+      name: sys/events
+    sys_memberships:
+      pretty_print: false
+      name: sys/memberships
     evaluationjobs:
       pretty_print: false
       name: numlab/evaluation_jobs

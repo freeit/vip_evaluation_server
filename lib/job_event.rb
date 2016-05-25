@@ -34,7 +34,9 @@ class JobEvent
   # Fetch an exercise from ECS.
   def fetch_exercise(job)
     # URI#path returns the path with leading "/"
-    path= URI(job["EvaluationJob"]["resources"]["exercise"]).path[1..-1]
+    /#{APP_CONFIG["resources"]["exercises"]["name"]}.*$/ =~ URI(job["EvaluationJob"]["resources"]["exercise"]).path[1..-1]
+    path = $~.to_s
+    Rails.logger.info "***** JobEvent#fetch_exercise: exercise path #{path}"
     exercise= @ecs.connection[path].delete
     exercise = unpack(exercise.body) if packed?(exercise.body)
     Rails.logger.info "***** JobEvent#fetch_exercise: #{path} = #{exercise}"
@@ -45,7 +47,8 @@ class JobEvent
   # Fetch an evaluation from ECS.
   def fetch_evaluation(job)
     # URI#path returns the path with leading "/"
-    path= URI(job["EvaluationJob"]["resources"]["evaluation"]).path[1..-1]
+    /#{APP_CONFIG["resources"]["evaluations"]["name"]}.*$/ =~ URI(job["EvaluationJob"]["resources"]["evaluation"]).path[1..-1]
+    path = $~.to_s
     evaluation= @ecs.connection[path].delete
     evaluation = unpack(evaluation.body) if packed?(evaluation.body)
     Rails.logger.info "***** JobEvent#fetch_evaluation: #{path} = #{evaluation}"
@@ -56,7 +59,8 @@ class JobEvent
   # Fetch a solution from ECS.
   def fetch_solution(job)
     # URI#path returns the path with leading "/"
-    path= URI(job["EvaluationJob"]["resources"]["solution"]).path[1..-1]
+    /#{APP_CONFIG["resources"]["solutions"]["name"]}.*$/ =~ URI(job["EvaluationJob"]["resources"]["solution"]).path[1..-1]
+    path = $~.to_s
     solution= @ecs.connection[path].delete
     solution = unpack(solution.body) if packed?(solution.body)
     Rails.logger.info "***** JobEvent#fetch_solution: #{path} = #{solution}"
