@@ -20,12 +20,12 @@ class ResultEvent
       end
     end
 
-    points= -1
+    points= "-1"
     result["Result"]["elements"].each do |e|
       case e["MIMEtype"]
       when "text/plain"
-        if (val=e["value"]).strip.start_with?("*** Score:")
-          points= val.strip.split(":")[1].to_i
+        if e["value"] =~ /\*\*\*\s*Score:\s*((\d+)\.?(\d*))/
+          points= $~[1]
           break
         end
       end
