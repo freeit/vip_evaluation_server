@@ -12,13 +12,13 @@ class JobEvent
   # Process a *sys/events* job event.
   # This is the entrypoint of job event processing.
   def process(jobevbody)
-    Rails.logger.info "***** JobEvent#process: eventbody=#{jobevbody}"
+    Rails.logger.debug "***** JobEvent#process: eventbody=#{jobevbody}"
     case jobevbody[0]['status']
     when "created","updated"
       jobr= @ecs.connection[jobevbody[0]['ressource']].delete
       job_headers= jobr.headers
       job=JSON.parse(jobr)
-      Rails.logger.info "***** JobEvent#process: EvaluationJob: #{JSON.pretty_generate(job)}"
+      Rails.logger.debug "***** JobEvent#process: EvaluationJob: #{JSON.pretty_generate(job)}"
       exercise = JSON.parse fetch_exercise(job)
       evaluation = JSON.parse fetch_evaluation(job)
       solution = JSON.parse fetch_solution(job)
@@ -36,10 +36,10 @@ class JobEvent
     # URI#path returns the path with leading "/"
     /#{APP_CONFIG["resources"]["exercises"]["name"]}.*$/ =~ URI(job["EvaluationJob"]["resources"]["exercise"]).path[1..-1]
     path = $~.to_s
-    Rails.logger.info "***** JobEvent#fetch_exercise: exercise path #{path}"
+    Rails.logger.debug "***** JobEvent#fetch_exercise: exercise path #{path}"
     exercise= @ecs.connection[path].delete
     exercise = unpack(exercise.body) if packed?(exercise.body)
-    Rails.logger.info "***** JobEvent#fetch_exercise: #{path} = #{exercise}"
+    Rails.logger.debug "***** JobEvent#fetch_exercise: #{path} = #{exercise}"
     exercise
   end
 
@@ -51,7 +51,7 @@ class JobEvent
     path = $~.to_s
     evaluation= @ecs.connection[path].delete
     evaluation = unpack(evaluation.body) if packed?(evaluation.body)
-    Rails.logger.info "***** JobEvent#fetch_evaluation: #{path} = #{evaluation}"
+    Rails.logger.debug "***** JobEvent#fetch_evaluation: #{path} = #{evaluation}"
     evaluation
   end
 
@@ -63,7 +63,7 @@ class JobEvent
     path = $~.to_s
     solution= @ecs.connection[path].delete
     solution = unpack(solution.body) if packed?(solution.body)
-    Rails.logger.info "***** JobEvent#fetch_solution: #{path} = #{solution}"
+    Rails.logger.debug "***** JobEvent#fetch_solution: #{path} = #{solution}"
     solution
   end
 
@@ -83,8 +83,8 @@ class JobEvent
       end
     end
     solution["Solution"]["evaluationService"]= { :jobID => jobid, :jobSender => job_sender }
-    Rails.logger.info "***** JobEvent#merge exercise: #{exercise.to_json}"
-    Rails.logger.info "***** JobEvent#merge solution: #{solution.to_json}"
+    Rails.logger.debug "***** JobEvent#merge exercise: #{exercise.to_json}"
+    Rails.logger.debug "***** JobEvent#merge solution: #{solution.to_json}"
     return exercise, solution
   end
 
@@ -93,15 +93,15 @@ class JobEvent
   def compute(exercise, solution, mid)
     response= @ecs.connection[APP_CONFIG["resources"]["exercises"]["name"]].post exercise.to_json, {"X-EcsReceiverMemberships" => mid}
     solution["Solution"]["exercise"]= response.headers[:location]
-    Rails.logger.info "***** JobEvent#compute substitute exersice URL in solution to: #{solution["Solution"]["exercise"]}"
+    Rails.logger.debug "***** JobEvent#compute substitute exersice URL in solution to: #{solution["Solution"]["exercise"]}"
     if exercise["Exercise"]["routing"]
       routing_path = APP_CONFIG["resources"]["servicename"]+"/"+exercise["Exercise"]["routing"]["solutionQueue"]
     else
       routing_path = APP_CONFIG["resources"]["solutions"]["name"]
     end
-    Rails.logger.info "***** JobEvent#compute routing path for solution: #{routing_path}"
+    Rails.logger.debug "***** JobEvent#compute routing path for solution: #{routing_path}"
     @ecs.connection[routing_path].post solution.to_json, {"X-EcsReceiverMemberships" => mid} do |response, request, result|
-      Rails.logger.info "***** JobEvent#compute solution post response: #{response.headers}"
+      Rails.logger.debug "***** JobEvent#compute solution post response: #{response.headers}"
     end
   end
 
