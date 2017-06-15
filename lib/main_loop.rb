@@ -40,12 +40,14 @@ class MainLoop
   rescue => e
     Rails.logger.error "MainLoop#start:Exception: #{e.class}: #{e.message}"
     Rails.logger.error Rails.backtrace_cleaner.clean(e.backtrace)
-    #retry if MainLoop.try_ones_more?
+    retry if MainLoop.try_ones_more?
   end
 
   private
 
   def self.try_ones_more?
+    sleep(2)
+    return true
     if MainLoop.exception_tries < 1
       sleep(2**MainLoop.exception_tries)
       MainLoop.exception_tries+= 1
