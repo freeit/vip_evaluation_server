@@ -12,7 +12,7 @@ Just download
 [vipeval-master.tar.gz](https://git.freeit.de/vipeval/snapshot/vipeval-master.tar.gz)
 and unpack or clone via `git clone https://git.freeit.de/vipeval`.
 
-##Configuration
+## Configuration
 Change into `vipeval` directory. Edit `config/appcfg.yml` (see explanations
 in config file). Normally you should only edit under `ecs:`.
 
