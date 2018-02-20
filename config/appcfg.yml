@@ -1,4 +1,27 @@
 defaults: &DEFAULTS
+
+  # ECS connection parameters
+  ecs:
+    # Should always be a secure connection via https
+    url: https://ecs.localhost
+    # basic auth credentials
+    login: ecs-login-name
+    password: ecs-password
+    # Uncomment next line if yoy want to serve the password via environment variable (security)
+    #password: <%= ENV['ECS_PASSWORD'] %>
+    #
+    # Uncomment next line if your ECS-Server-Certificate is signed by a local CA.
+    #ssl_ca_file: /path/to/local-root-ca.crt.pem
+    #
+    # verify ECS server certificate
+    # Comment next line if ecs->url scheme is not https which is a very bad idea in respect of security
+    verify_ssl: true
+
+
+  ###
+  ### normally you won't need to change anything after here
+  ###
+
   servicename: ViP merge and compute
 
   # set to false if you want to make your http calls to ECS directly
@@ -10,6 +33,7 @@ defaults: &DEFAULTS
   # valid debug levels: debug, info, error
   debug_level: debug
 
+  # mapping of resource names
   resources:
     servicename: numlab
     sys_events:
@@ -40,19 +64,14 @@ defaults: &DEFAULTS
       pretty_print: false
       name: numlab/points
 
+  # mapping known event-types
+  # only these event-types trigger some action
   eventtypes:
     job:
       name: numlab/evaluation_jobs
     result:
       name: numlab/results
 
-  ecs:
-    url: https://ecs.example.com
-    # basic auth
-    login: mergeandcompute
-    password: auswertung
-    ssl_ca_file: ca.crt.pem
-    verify_ssl: false
 
 development:
   <<: *DEFAULTS
