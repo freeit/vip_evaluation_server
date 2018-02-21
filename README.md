@@ -26,7 +26,7 @@ In the upcoming irb (interactive ruby shell) type:
     MainLoop.instance.start
 
 ### Running in background
-For instance via rails runner, change into `vipeval` directory and type:
+For instance via rails runner, change into vipeval root directory and type:
 
     bundle exec rails runner -e production MainLoop.instance.start &
 
@@ -35,7 +35,7 @@ or
     /path/to/vipeval/bundle exec rails runner -e production MainLoop.instance.start &
 
 You can place this also in a startup script (e.g. [sles12 init
-script](doc/vipeval_sles12_startscript)):
+script][vipeval-sles12-startscript]):
 
     ...
     case "$1" in
@@ -51,7 +51,7 @@ script](doc/vipeval_sles12_startscript)):
 For security reasons you may want to serve at least the ECS login password
 via shell environment variable. Therefore you must uncomment the
 `#password: <%= ENV['ECS_PASSWORD'] %>` line in `config/appcfg.yml` and
-comment the old `password: ...` line. then you can provide the password as
+comment the old `password: ...` line. Then you can provide the password as
 an environment variable at the command line:
 
     ECS_PASSWORD=my-secure-password bundle exec rails console -e production
@@ -62,7 +62,7 @@ or
 
 Of course it's up to you how you set the ECS\_PASSWORD enverionment
 variable. For instance you set it in your startup script (e.g. [sles12 init
-script](doc/vipeval_sles12_startscript)), which is owned by root and could
+script][vipeval-sles12-startscript]), which is owned by root and could
 only read by him. Or read it from a file owned and readable by root:
 
     ECS_PASSWORD=$(cat my_password_file) bundle exec ...
@@ -71,3 +71,4 @@ only read by him. Or read it from a file owned and readable by root:
 [vipeval-master_github.zip]: https://github.com/freeit/vip_evaluation_server/archive/master.zip
 [freeit-repo]: https://git.freeit.de/vipeval
 [github-repo]: https://github.com/freeit/vip_evaluation_server
+[vipeval-sles12-startscript]: misc/vipeval_sles12_startscript
