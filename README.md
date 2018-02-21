@@ -4,21 +4,20 @@ vipeval is a backend service for ECS/ViP. It's running as a pure client i.e. the
 * You need Ruby 2.1.x installed
 * No database needed
 
-It's allowed to run multiple instances of vipeval. They work cuncurrently
+It's allowed to run multiple instances of vipeval. They work concurrently
 on their ECS resources.
 
 ## Installation
-Just download
-[vipeval-master.tar.gz](https://git.freeit.de/vipeval/snapshot/vipeval-master.tar.gz)
-and unpack or clone via `git clone https://git.freeit.de/vipeval`.
+Just download vipeval package ([github zip][vipeval-master_github.zip], [freeit tgz][vipeval-master_freeit.tgz])
+and unpack or clone it from git repository ([github][github-repo], [freeit][freeit-repo]) via git clone.
 
 ## Configuration
-Change into `vipeval` directory. Edit `config/appcfg.yml` (see explanations
+Change into vipeval root directory. Edit `config/appcfg.yml` (see explanations
 in config file). Normally you should only edit under `ecs:`.
 
 ## Running
 ### Running in foreground
-Change into `vipeval` directory and type:
+Change into vipeval root directory and type:
 
     bundle exec rails console -e production
 
@@ -68,4 +67,7 @@ only read by him. Or read it from a file owned and readable by root:
 
     ECS_PASSWORD=$(cat my_password_file) bundle exec ...
 
-
+[vipeval-master_freeit.tgz]: https://git.freeit.de/vipeval/snapshot/vipeval-master.tar.gz
+[vipeval-master_github.zip]: https://github.com/freeit/vip_evaluation_server/archive/master.zip
+[freeit-repo]: https://git.freeit.de/vipeval
+[github-repo]: https://github.com/freeit/vip_evaluation_server
