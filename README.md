@@ -12,7 +12,7 @@ Just download vipeval package ([github zip][vipeval-master_github.zip], [freeit 
 and unpack or clone it from git repository ([github][github-repo], [freeit][freeit-repo]) via git clone.
 
 ## Configuration
-Change into vipeval root directory. Edit `config/appcfg.yml` (see explanations
+Change into vipeval root directory. Edit [config/appcfg.yml][appcfg.yml] (see explanations
 in config file). Normally you should only edit under `ecs:`.
 
 ## Running
@@ -72,3 +72,4 @@ only read by him. Or read it from a file owned and readable by root:
 [freeit-repo]: https://git.freeit.de/vipeval
 [github-repo]: https://github.com/freeit/vip_evaluation_server
 [vipeval-sles12-startscript]: misc/vipeval_sles12_startscript
+[appcfg.yml]: config/appcfg.yml
